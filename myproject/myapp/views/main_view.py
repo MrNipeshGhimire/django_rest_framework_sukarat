@@ -32,4 +32,20 @@ def student_view_detail(request,id):
         student.delete()
         return Response({'msg':"Student data deleted successfully"},status=status.HTTP_200_OK)
     
+    if request.method == 'GET':
+        serializer = StudentSerializer(student)
+        return Response(serializer.data)
+    
+    # PUT method 
+    if request.method == 'PUT':
+       name = request.data.get('name')
+       print(name)
+       serializer = StudentSerializer(student,data=request.data)
+       if serializer.is_valid():
+           serializer.save()
+           return Response({'msg':"Student updated successfully","updated_data":serializer.data},status=status.HTTP_200_OK)
+       else:
+           return Response({'error':serializer.error},status=status.HTTP_400_BAD_REQUEST)
+    
+    
 
